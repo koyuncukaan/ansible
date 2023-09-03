@@ -1,7 +1,27 @@
 - name: Install packages
   become: true
   apt:
-    name: [ "tmux", "fzf", "gimp", "xclip", "tldr", "ripgrep", "alacritty","shutter" ]
+    name: [ "tmux", "fzf", "gimp", "xclip", "tldr", "ripgrep","shutter" ]
   tags:
     - install
     - productivity
+# Add the aslatter/ppa repository
+- name: Add aslatter/ppa repository
+  become: true
+  apt_repository:
+    repo: ppa:aslatter/ppa
+    state: present
+  tags:
+    - install
+    - alacritty
+
+# Install alacritty
+- name: Install alacritty
+  become: true
+  apt:
+    name: alacritty
+    update_cache: yes  # This ensures the package cache is updated after adding a new repository
+    state: present
+  tags:
+    - install
+    - alacritty

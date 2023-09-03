@@ -1,46 +1,40 @@
-- name: Install nodejs and npm
-  become: true
-  apt:
-    name: ["nodejs", "npm"]
-  tags:
-    - install
-    - node
+---
+- hosts: localhost
+  tasks:
 
-- name: npmjs prefix
-  shell: mkdir -p ~/.local/.npm-global
-  tags:
-  - install
-  - node
+    # 1. Install npm using apt
+    - name: Install npm
+      become: true
+      apt:
+        name: npm
+        state: present
+      tags:
+        - install
+        - node
 
-- name: add npmjs to path
-  shell: PATH=~/.local/.npm-global/bin:$PATH
-  tags:
-  - install
-  - node
+    # 2. Install n globally using npm
+    - name: Install n globally
+      shell: npm install -g n
+      environment:
+        PATH: /usr/local/bin:{{ ansible_env.PATH }}
+      tags:
+        - install
+        - node
 
-- name: npmjs global settings
-  shell: npm config set prefix '~/.local/.npm-global'
-  tags:
-  - install
-  - node
+    # 3. Install the latest LTS version of Node.js using n
+    - name: Install Node.js LTS version using n
+      shell: n lts
+      environment:
+        PATH: /usr/local/bin:{{ ansible_env.PATH }}
+      tags:
+        - install
+        - node
 
-- name: npmjs global settings export path in case I don't have dotfiles installed
-  shell: export PATH=~/.local/.npm-global/bin:$PATH
-  tags:
-  - install
-  - node
-  - npm-path
-
-- name: Install N
-  npm:
-    name: n
-    global: yes
-  tags:
-    - install
-    - node
-
-# - name: Install correct version of Node
-#   shell: n 14
-#   tags:
-#     - install
-#     - node
+     - name: Ensure .zshrc sources .zsh_profile
+      lineinfile:
+        path: ~/.zshrc
+        line: 'source /home/kaan/.dotfiles/zsh/.zsh_profile'
+        state: present
+      tags:
+        - zsh
+        - dotfiles     
