@@ -1,7 +1,7 @@
 - name: Install packages
   become: true
   apt:
-    name: [ "tmux", "fzf", "gimp", "xclip", "tldr", "ripgrep","shutter" ]
+    name: [ "tmux", "fzf", "gimp", "xclip", "tldr", "ripgrep", "alacritty","shutter","rofi" ]
   tags:
     - install
     - productivity
@@ -25,3 +25,13 @@
   tags:
     - install
     - alacritty
+
+- name: Install greenclip
+  become: true
+  get_url: 
+    url: https://github.com/erebe/greenclip/releases/download/v4.2/greenclip
+    dest: /usr/local/bin/greenclip
+    mode: "0755"  
+  tags:
+    - install
+    - productivity
