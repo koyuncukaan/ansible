@@ -1,40 +1,43 @@
----
-- hosts: localhost
-  tasks:
+# 1. Install npm using apt
+- name: Install npm
+  become: true
+  apt:
+    name: npm
+    state: present
+  tags:
+    - install
+    - node
 
-    # 1. Install npm using apt
-    - name: Install npm
-      become: true
-      apt:
-        name: npm
-        state: present
-      tags:
-        - install
-        - node
+# 2. Install n globally using npm
+- name: Install n globally
+  shell: npm install -g n
+  environment:
+    PATH: /usr/local/bin:{{ ansible_env.PATH }}
+  tags:
+    - install
+    - node
 
-    # 2. Install n globally using npm
-    - name: Install n globally
-      shell: npm install -g n
-      environment:
-        PATH: /usr/local/bin:{{ ansible_env.PATH }}
-      tags:
-        - install
-        - node
+# 3. Install the latest LTS version of Node.js using n
+- name: Install Node.js LTS version using n
+  shell: n lts
+  environment:
+    PATH: /usr/local/bin:{{ ansible_env.PATH }}
+  tags:
+    - install
+    - node
 
-    # 3. Install the latest LTS version of Node.js using n
-    - name: Install Node.js LTS version using n
-      shell: n lts
-      environment:
-        PATH: /usr/local/bin:{{ ansible_env.PATH }}
-      tags:
-        - install
-        - node
-
-     - name: Ensure .zshrc sources .zsh_profile
-      lineinfile:
-        path: ~/.zshrc
-        line: 'source /home/kaan/.dotfiles/zsh/.zsh_profile'
-        state: present
-      tags:
-        - zsh
-        - dotfiles     
+- name: Ensure .zshrc sources .zsh_profile
+  lineinfile:
+    path: ~/.zshrc
+    line: "source /home/kaan/.dotfiles/zsh/.zsh_profile"
+    state: present
+  tags:
+    - zsh
+    - dotfiles
+  # 4. Enable Corepack
+- name: Enable Corepack
+  become: true
+  shell: corepack enable
+  tags:
+    - install
+    - node

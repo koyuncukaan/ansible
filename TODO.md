@@ -1,0 +1,3 @@
+- add ssh config with vault
+- test docker-setup
+- alacritty?
