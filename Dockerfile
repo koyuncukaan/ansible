@@ -1,4 +1,4 @@
-FROM ubuntu AS base
+FROM ubuntu:focal AS base
 WORKDIR /usr/local/bin
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
@@ -17,6 +17,8 @@ RUN adduser --gecos "" --uid 1000 --gid 1000 --disabled-password kaan
 RUN echo "kaan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/kaan
 USER kaan
 
-WORKDIR /home/kaan
+RUN mkdir /home/kaan/startup
+
+WORKDIR /home/kaan/startup
 FROM kaan
 COPY . .
