@@ -1,3 +1,5 @@
 - add ssh config with vault
 - test docker-setup
 - alacritty?
+- add lazyvim
+- add git hidden gems
