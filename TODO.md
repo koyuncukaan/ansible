@@ -1,5 +1,4 @@
-- add ssh config with vault
+- fix node-packages & npm tasks for global npm issue
 - test docker-setup
 - alacritty?
-- add lazyvim
 - add git hidden gems

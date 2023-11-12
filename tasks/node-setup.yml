@@ -1,6 +1,7 @@
 # 1. Install npm using apt
 - name: Install npm
   become: true
+  become_user: "{{ my_user }}"
   apt:
     name: npm
     state: present
@@ -8,17 +9,25 @@
     - install
     - node
 
+- name: Configure npm to install global packages in user directory
+  shell: npm config set prefix '~/.npm-global'
+  become_user: kaan
+
 # 2. Install n globally using npm
 - name: Install n globally
+  become: true
+  become_user: "{{ my_user }}"
   shell: npm install -g n
   environment:
-    PATH: /usr/local/bin:{{ ansible_env.PATH }}
+    PATH: "{{ lookup('env', 'HOME') }}:{{ ansible_env.PATH }}"
   tags:
     - install
     - node
 
 # 3. Install the latest LTS version of Node.js using n
 - name: Install Node.js LTS version using n
+  become: true
+  become_user: "{{ my_user }}"
   shell: n lts
   environment:
     PATH: /usr/local/bin:{{ ansible_env.PATH }}
@@ -29,7 +38,7 @@
 - name: Ensure .zshrc sources .zsh_profile
   lineinfile:
     path: ~/.zshrc
-    line: "source /home/kaan/.dotfiles/zsh/.zsh_profile"
+    line: "source {{ lookup('env', 'HOME') }}/.dotfiles/zsh/.zsh_profile"
     state: present
   tags:
     - zsh

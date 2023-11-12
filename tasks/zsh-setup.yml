@@ -5,18 +5,20 @@
   tags: &tags_for_zsh_tasks ["install", "productivity", "dotfiles", "zsh"]
 
 - name: Install ZSH
+  become: true
   apt: name=zsh
   tags: *tags_for_zsh_tasks
   when: zsh_installed.rc != 0
 
 - name: Change shell to zsh
+  become: true
   shell: chsh -s $(which zsh)
   tags: *tags_for_zsh_tasks
   when: zsh_installed.rc != 0
 
 - name: Check that the .oh-my-zsh directory exists
   stat:
-    path: /home/kaan/.oh-my-zsh
+    path: "{{ lookup('env', 'HOME') }}/.oh-my-zsh"
   register: oh_my_stats
   tags: *tags_for_zsh_tasks
   when: zsh_installed.rc != 0

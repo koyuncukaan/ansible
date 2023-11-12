@@ -1,6 +1,11 @@
 - hosts: localhost
+  environment:
+    HOME: /home/kaan
   vars:
+    source_key: "./.ssh/id_ed25519"
+    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
     personal: "{{ lookup('env', 'HOME') }}/personal"
+    my_user: kaan
   pre_tasks:
     - name: Update Apt
       become: true
@@ -13,11 +18,12 @@
         - core
   tasks:
     - include: tasks/git-setup.yml
+    - include: tasks/ssh.yml
     - include: tasks/core-setup.yml
     - include: tasks/zsh-setup.yml
-    - include: tasks/node-setup.yml
-    - include: tasks/npm-packages.yml
+    #- include: tasks/node-setup.yml
+    #- include: tasks/npm-packages.yml
     - include: tasks/nvim-setup.yml
     - include: tasks/dotfiles.yml
     - include: tasks/productivity-tools.yml
-    # - include: tasks/docker-setup.yml
+  # - include: tasks/docker-setup.yml

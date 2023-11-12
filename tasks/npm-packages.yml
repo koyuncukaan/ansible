@@ -9,6 +9,7 @@
   npm:
     name: eslint
     global: yes
+  become_user: "{{ my_user }}"
   tags:
     - install
     - node
@@ -16,6 +17,7 @@
   npm:
     name: typescript-language-server
     global: yes
+  become_user: "{{ my_user }}"
   tags:
     - install
     - node
@@ -23,6 +25,7 @@
   npm:
     name: typescript
     global: yes
+  become_user: "{{ my_user }}"
   tags:
     - install
     - node
@@ -30,6 +33,7 @@
   npm:
     name: ts-node
     global: yes
+  become_user: "{{ my_user }}"
   tags:
     - install
     - node

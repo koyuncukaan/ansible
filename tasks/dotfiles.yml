@@ -1,4 +1,5 @@
 - name: Installing stow
+  become: true
   apt: name=stow
   tags:
     - install
@@ -6,7 +7,7 @@
     - stow
 # - name: Cloning .dotfiles
 #   ansible.builtin.git:
-#     repo: 'git@github.com:koyuncukaan/.dotfiles.git'
+#     repo: "git@github.com:koyuncukaan/.dotfiles.git"
 #     dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
 #     recursive: yes
 #     update: yes
@@ -16,19 +17,41 @@
 #     - install
 #     - dotfiles
 #     - stow
-# - name: Stow dotfiles
-#   shell: cd $HOME/.dotfiles && ./.scripts/ubuntu
-#   tags:
-#     - install
-#     - dotfiles
-#     - stow
+- name: Start SSH Agent, add key, and clone .dotfiles
+  shell: |
+    eval "$(ssh-agent -s)"
+    ssh-add "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
+    git clone git@github.com:koyuncukaan/.dotfiles.git "{{ lookup('env', 'HOME') }}/.dotfiles"
+  args:
+    executable: /bin/bash
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Start SSH Agent, add key, and clone lazyvim
+  shell: |
+    eval "$(ssh-agent -s)"
+    ssh-add "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
+    git clone https://github.com/LazyVim/starter "{{ lookup('env', 'HOME') }}/.dotfiles/nvim/.config/nvim"
+  args:
+    executable: /bin/bash
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Stow dotfiles
+  shell: cd $HOME/.dotfiles && ./.scripts/ubuntu
+  tags:
+    - install
+    - dotfiles
+    - stow
 
 - name: Stow dotfiles
   become_user: kaan
-  environment:
-    HOME: /home/kaan
   shell: |
-    cd /home/kaan/.dotfiles
+    cd "{{ lookup('env', 'HOME') }}/.dotfiles"
     ./.scripts/ubuntu
   args:
     executable: /bin/zsh
