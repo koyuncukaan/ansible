@@ -38,3 +38,8 @@
     dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
   tags: *tags_for_zsh_tasks
   when: zsh_installed.rc != 0
+
+- name: remove .zshrc for stow
+  shell: cd ~ && rm .zshrc
+  tags: *tags_for_zsh_tasks
+  when: zsh_installed.rc != 0

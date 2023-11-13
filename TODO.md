@@ -1,3 +1,4 @@
+- add personal nvim lua's
 - fix node-packages & npm tasks for global npm issue
 - test docker-setup
 - alacritty?

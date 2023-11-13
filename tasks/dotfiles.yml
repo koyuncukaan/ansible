@@ -5,18 +5,11 @@
     - install
     - dotfiles
     - stow
-# - name: Cloning .dotfiles
-#   ansible.builtin.git:
-#     repo: "git@github.com:koyuncukaan/.dotfiles.git"
-#     dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
-#     recursive: yes
-#     update: yes
-#     accept_hostkey: yes
-#     version: master
-#   tags:
-#     - install
-#     - dotfiles
-#     - stow
+- name: Check if .dotfiles repository exists
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.dotfiles"
+  register: dotfiles_repo
+
 - name: Start SSH Agent, add key, and clone .dotfiles
   shell: |
     eval "$(ssh-agent -s)"
@@ -24,10 +17,16 @@
     git clone git@github.com:koyuncukaan/.dotfiles.git "{{ lookup('env', 'HOME') }}/.dotfiles"
   args:
     executable: /bin/bash
+  when: not dotfiles_repo.stat.exists
   tags:
     - install
     - dotfiles
     - stow
+
+- name: Check if LazyVim starter exists
+  stat:
+    path: "{{ lookup('env', 'HOME') }}/.dotfiles/nvim/.config/nvim/init.lua"
+  register: lazyvim_repo
 
 - name: Start SSH Agent, add key, and clone lazyvim
   shell: |
@@ -36,6 +35,7 @@
     git clone https://github.com/LazyVim/starter "{{ lookup('env', 'HOME') }}/.dotfiles/nvim/.config/nvim"
   args:
     executable: /bin/bash
+  when: not lazyvim_repo.stat.exists
   tags:
     - install
     - dotfiles

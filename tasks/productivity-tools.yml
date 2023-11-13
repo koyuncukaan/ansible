@@ -16,3 +16,10 @@
     - install
     - productivity
 
+- name: Install ranger-fm using pip
+  pip:
+    name: ranger-fm
+    state: present
+  tags:
+    - install
+    - productivity
